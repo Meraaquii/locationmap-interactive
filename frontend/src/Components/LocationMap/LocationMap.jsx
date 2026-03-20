@@ -151,14 +151,45 @@ const customLocations = {
   ],
 };
 
+// Hide all default Google POI icons using StyledMapType (works even with mapId)
+const HIDE_POI_STYLES = [
+  {
+    featureType: "poi",
+    elementType: "labels.icon",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "poi",
+    elementType: "labels.text",
+    stylers: [{ visibility: "off" }],
+  },
+  { featureType: "poi.business", stylers: [{ visibility: "off" }] },
+  { featureType: "poi.attraction", stylers: [{ visibility: "off" }] },
+  { featureType: "poi.government", stylers: [{ visibility: "off" }] },
+  { featureType: "poi.medical", stylers: [{ visibility: "off" }] },
+  {
+    featureType: "poi.park",
+    elementType: "labels.icon",
+    stylers: [{ visibility: "off" }],
+  },
+  { featureType: "poi.place_of_worship", stylers: [{ visibility: "off" }] },
+  { featureType: "poi.school", stylers: [{ visibility: "off" }] },
+  { featureType: "poi.sports_complex", stylers: [{ visibility: "off" }] },
+  {
+    featureType: "transit",
+    elementType: "labels.icon",
+    stylers: [{ visibility: "off" }],
+  },
+];
+
 function getColorForType(type) {
   const colors = {
-    shopping: "#e74c3c",
+    shopping: "#5b6c8f",
     education: "#3498db",
     healthcare: "#2ecc71",
     entertainment: "#9b59b6",
   };
-  return colors[type] || "#da4c28";
+  return colors[type] || "#5b6c8f";
 }
 
 function getIconElement(type) {
@@ -176,7 +207,18 @@ function getIconElement(type) {
   }
 }
 
-function MarkerPin({ type, name, distance, showLabel }) {
+const MARKER_ANIMATION_STYLES = `
+  @keyframes iconShadowPulse {
+    0%   { box-shadow: 0 4px 16px rgba(231, 62, 63, 0.7); }
+    50%  { box-shadow: 0 6px 28px 10px rgba(231, 62, 63, 0.95), 0 0 0 10px rgba(231, 62, 63, 0.3); }
+    100% { box-shadow: 0 4px 16px rgba(231, 62, 63, 0.7); }
+  }
+  .marker-icon-bounce {
+    animation: iconShadowPulse 2.2s ease-in-out infinite;
+  }
+`;
+
+function MarkerPin({ type, name, distance, showLabel, animationDelay = "0s" }) {
   const color = getColorForType(type);
   const icon = getIconElement(type);
   if (!icon) return null;
@@ -191,6 +233,7 @@ function MarkerPin({ type, name, distance, showLabel }) {
       }}
     >
       <div
+        className="marker-icon-bounce"
         style={{
           width: 34,
           height: 34,
@@ -202,10 +245,9 @@ function MarkerPin({ type, name, distance, showLabel }) {
           boxShadow: `0 4px 12px ${color}88`,
           border: "3px solid white",
           flexShrink: 0,
-          transition: "transform 0.2s ease",
+          animationDelay,
+          "--marker-color": `${color}99`,
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
-        onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
       >
         {icon}
       </div>
@@ -253,14 +295,11 @@ function CustomPlacesMarkers({ category }) {
 
   useEffect(() => {
     if (!map) return;
-
     const handleZoom = () => {
       setShowLabels(map.getZoom() >= 12);
     };
-
     const listener = map.addListener("zoom_changed", handleZoom);
     handleZoom();
-
     return () => {
       window.google?.maps?.event?.removeListener(listener);
     };
@@ -281,6 +320,7 @@ function CustomPlacesMarkers({ category }) {
             name={place.name}
             distance={place.distance}
             showLabel={showLabels}
+            animationDelay={`${(index * 0.3) % 1.5}s`}
           />
         </AdvancedMarker>
       ))}
@@ -292,11 +332,33 @@ function MapController({ selectedCategory, onMapReady }) {
   const map = useMap();
 
   useEffect(() => {
-    if (map) onMapReady(map);
+    if (!map) return;
+    onMapReady(map);
+
+    const styledMapType = new window.google.maps.StyledMapType(
+      HIDE_POI_STYLES,
+      {
+        name: "Clean Map",
+      },
+    );
+    map.mapTypes.set("clean_map", styledMapType);
+
+    map.setMapTypeId("roadmap");
   }, [map, onMapReady]);
+
+  useEffect(() => {
+    if (!map) return;
+    if (selectedCategory) {
+      map.setMapTypeId("clean_map");
+    } else {
+      map.setMapTypeId("roadmap");
+    }
+  }, [map, selectedCategory]);
 
   return (
     <>
+      <style>{MARKER_ANIMATION_STYLES}</style>
+
       <AdvancedMarker position={center} title="Main Location">
         <div
           style={{
@@ -326,7 +388,6 @@ function MapController({ selectedCategory, onMapReady }) {
         </div>
       </AdvancedMarker>
 
-      {/* Category markers */}
       {selectedCategory && <CustomPlacesMarkers category={selectedCategory} />}
     </>
   );
@@ -352,7 +413,7 @@ export default function LocationMap() {
     setSelectedCategory(null);
     if (mapInstance) {
       mapInstance.panTo(center);
-      mapInstance.setZoom(12);
+      mapInstance.setZoom(18);
     }
   };
 
@@ -400,7 +461,7 @@ export default function LocationMap() {
         <div className="map-wrapper">
           <Map
             defaultCenter={center}
-            defaultZoom={12}
+            defaultZoom={18}
             mapId="DEMO_MAP_ID"
             gestureHandling="greedy"
             disableDefaultUI={false}
