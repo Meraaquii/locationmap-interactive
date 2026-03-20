@@ -1,0 +1,84 @@
+/* Main Page */
+.map-page {
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+
+/* 🗺️ Map Full Screen */
+.map-container {
+  height: 100%;
+  width: 100%;
+}
+
+.map-container iframe {
+  height: 100%;
+  width: 100%;
+  border: none;
+}
+
+/* 🧭 Header Overlay */
+.map-header {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 12px 20px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.map-header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+/* Header Button */
+.map-btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  background: #1976d2;
+  color: white;
+  cursor: pointer;
+}
+
+.map-btn:hover {
+  background: #155fa0;
+}
+
+/* 🔘 Bottom Floating Actions */
+.map-actions {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  background: white;
+  padding: 10px;
+  border-radius: 14px;
+  display: flex;
+  gap: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.map-actions button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 999px;
+  background: #f1f5f9;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.map-actions button:hover {
+  background: #1976d2;
+  color: white;
+  transform: translateY(-1px);
+}
