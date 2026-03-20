@@ -1,13 +1,11 @@
-/* Font-face declaration MUST come FIRST */
 @font-face {
   font-family: "MyFont";
-  src: url("fonts/LINEARGROTESK-REGULAR.ttf") format("truetype");
+  src: url("/fonts/LINEARGROTESK-REGULAR.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
-  font-display: swap; /* This helps with immediate display */
+  font-display: swap;
 }
 
-/* Apply to ALL elements */
 * {
   font-family: "MyFont", sans-serif;
   margin: 0;
@@ -22,7 +20,6 @@ body {
   overflow: hidden;
 }
 
-/* Specific body rule for extra assurance */
 body {
   font-family: "MyFont", Arial, sans-serif !important;
 }

@@ -1,15 +1,10 @@
 import React from "react";
-//import Map from "./Components/Map/Map";
-//import Location from "./Components/Location/Location";
-import MapLocation from "./Components/MapLocation/MapLocation";
-import "./App.css";
+import LocationMap from "./Components/LocationMap/LocationMap";
 
 function App() {
   return (
     <div>
-      {/* <Location /> */}
-      {/* <Map /> */}
-      <MapLocation />
+      <LocationMap />
     </div>
   );
 }
