@@ -207,14 +207,25 @@ function getIconElement(type) {
   }
 }
 
+// const MARKER_ANIMATION_STYLES = `
+//   @keyframes iconShadowPulse {
+//     0%   { box-shadow: 0 3px 8px rgba(231, 62, 63, 0.7); }
+//     50%  { box-shadow: 0 6px 12px  rgba(231, 62, 63, 0.6), 0 0 0 5px rgba(231, 62, 63, 0.3); }
+//     100% { box-shadow: 0 3px 8px rgba(231, 62, 63, 0.7); }
+//   }
+//   .marker-icon-bounce {
+//     animation: iconShadowPulse 1.8s ease-in-out infinite;
+//   }
+// `;
+
 const MARKER_ANIMATION_STYLES = `
-  @keyframes iconShadowPulse {
-    0%   { box-shadow: 0 4px 16px rgba(231, 62, 63, 0.7); }
-    50%  { box-shadow: 0 6px 28px 10px rgba(231, 62, 63, 0.95), 0 0 0 10px rgba(231, 62, 63, 0.3); }
-    100% { box-shadow: 0 4px 16px rgba(231, 62, 63, 0.7); }
+  @keyframes markerPulse {
+    0%   { transform: scale(1);    box-shadow: 0 3px 8px var(--marker-shadow); }
+    50%  { transform: scale(1.25); box-shadow: 0 6px 12px var(--marker-shadow); }
+    100% { transform: scale(1);    box-shadow: 0 3px 8px var(--marker-shadow); }
   }
   .marker-icon-bounce {
-    animation: iconShadowPulse 2.2s ease-in-out infinite;
+    animation: markerPulse 1.8s ease-in-out infinite;
   }
 `;
 
@@ -242,11 +253,9 @@ function MarkerPin({ type, name, distance, showLabel, animationDelay = "0s" }) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          boxShadow: `0 4px 12px ${color}88`,
           border: "3px solid white",
           flexShrink: 0,
-          animationDelay,
-          "--marker-color": `${color}99`,
+          "--marker-shadow": `${color}66`,
         }}
       >
         {icon}
@@ -362,8 +371,8 @@ function MapController({ selectedCategory, onMapReady }) {
       <AdvancedMarker position={center} title="Main Location">
         <div
           style={{
-            width: 80,
-            height: 30,
+            width: 100,
+            height: 38,
             borderRadius: "4px",
             backgroundColor: "#ffffff",
             border: "2px solid #4285f4",
@@ -379,8 +388,8 @@ function MapController({ selectedCategory, onMapReady }) {
               position: "absolute",
               top: "52%",
               left: "46%",
-              width: "55%",
-              height: "55%",
+              width: "50%",
+              height: "50%",
               objectFit: "contain",
               transform: "translate(-50%, -50%) scale(2.5)",
             }}
