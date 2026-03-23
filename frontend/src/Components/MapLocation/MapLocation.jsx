@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./MapLocation.css";
 
 import SchoolIcon from "@mui/icons-material/School";
@@ -9,7 +9,6 @@ import DirectionsTransitIcon from "@mui/icons-material/DirectionsTransit";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import MapLogo from "../../assets/logo.png";
 import Logo from "../../assets/Mia_Logo.png";
-import bg from "../../assets/MERAAQUII.png";
 
 import {
   APIProvider,
@@ -215,142 +214,159 @@ const customLocations = {
   ],
 };
 
-function getIconWithName(type, name, distance, showLabel = true) {
-  const wrapperStyle = {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    cursor: "pointer",
-    transition: "all 0.2s ease",
-  };
-
-  const circleStyle = {
-    width: 32,
-    height: 32,
-    borderRadius: "50%",
-    backgroundColor: getColorForType(type),
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    boxShadow: `0 4px 12px ${getColorForType(type)}66`,
-    border: "3px solid white",
-    color: "white",
-    fontSize: 18,
-    transition: "transform 0.2s ease",
-  };
-
-  const labelStyle = {
-    padding: "6px 12px",
-    fontSize: "13px",
-    fontWeight: 600,
-    color: "#1a1a1a",
-    backgroundColor: "white",
-    borderRadius: "6px",
-    maxWidth: 250,
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-    marginLeft: 10,
-    display: showLabel ? "flex" : "none",
-    flexDirection: "column",
-    gap: "2px",
-  };
-
-  const distanceStyle = {
-    fontSize: "11px",
-    color: "#666",
-    fontWeight: 500,
-  };
-
-  let iconElement = null;
-
-  switch (type) {
-    case "shopping":
-      iconElement = <ShoppingCartIcon sx={{ color: "white", fontSize: 18 }} />;
-      break;
-    case "education":
-      iconElement = <SchoolIcon sx={{ color: "white", fontSize: 18 }} />;
-      break;
-    case "healthcare":
-      iconElement = <LocalHospitalIcon sx={{ color: "white", fontSize: 18 }} />;
-      break;
-    case "entertainment":
-      iconElement = <MovieIcon sx={{ color: "white", fontSize: 18 }} />;
-      break;
-    case "transportation":
-      iconElement = (
-        <DirectionsTransitIcon sx={{ color: "white", fontSize: 18 }} />
-      );
-      break;
-    default:
-      return null;
+// ── Animation ──────────────────────────────────────────────────────────────────
+const MARKER_ANIMATION_STYLES = `
+  @keyframes markerPulse {
+    0%   { transform: scale(1);    box-shadow: 0 3px 8px var(--marker-shadow); }
+    50%  { transform: scale(1.25); box-shadow: 0 6px 12px var(--marker-shadow); }
+    100% { transform: scale(1);    box-shadow: 0 3px 8px var(--marker-shadow); }
   }
+  .marker-icon-pulse {
+    animation: markerPulse 1.8s ease-in-out infinite;
+  }
+`;
 
-  return (
-    <div
-      style={wrapperStyle}
-      onMouseEnter={(e) => {
-        const circle = e.currentTarget.querySelector("div:first-child");
-        if (circle) circle.style.transform = "scale(1.2)";
-      }}
-      onMouseLeave={(e) => {
-        const circle = e.currentTarget.querySelector("div:first-child");
-        if (circle) circle.style.transform = "scale(1)";
-      }}
-    >
-      <div style={circleStyle}>{iconElement}</div>
-      <div style={labelStyle} title={`${name} - ${distance}`}>
-        <span>{name}</span>
-        <span style={distanceStyle}>{distance}</span>
-      </div>
-    </div>
-  );
-}
+// ── Hide default Google POI icons ──────────────────────────────────────────────
+const HIDE_POI_STYLES = [
+  {
+    featureType: "poi",
+    elementType: "labels.icon",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "poi",
+    elementType: "labels.text",
+    stylers: [{ visibility: "off" }],
+  },
+  { featureType: "poi.business", stylers: [{ visibility: "off" }] },
+  { featureType: "poi.attraction", stylers: [{ visibility: "off" }] },
+  { featureType: "poi.government", stylers: [{ visibility: "off" }] },
+  { featureType: "poi.medical", stylers: [{ visibility: "off" }] },
+  {
+    featureType: "poi.park",
+    elementType: "labels.icon",
+    stylers: [{ visibility: "off" }],
+  },
+  { featureType: "poi.place_of_worship", stylers: [{ visibility: "off" }] },
+  { featureType: "poi.school", stylers: [{ visibility: "off" }] },
+  { featureType: "poi.sports_complex", stylers: [{ visibility: "off" }] },
+  {
+    featureType: "transit",
+    elementType: "labels.icon",
+    stylers: [{ visibility: "off" }],
+  },
+];
 
 function getColorForType(type) {
   const colors = {
-    shopping: "#e74c3c",
+    shopping: "#5b6c8f",
     education: "#3498db",
     healthcare: "#2ecc71",
     entertainment: "#9b59b6",
     transportation: "#f39c12",
   };
-  return colors[type] || "#da4c28";
+  return colors[type] || "#5b6c8f";
 }
 
-// Component to render custom markers
+function getIconElement(type) {
+  switch (type) {
+    case "shopping":
+      return <ShoppingCartIcon sx={{ color: "white", fontSize: 18 }} />;
+    case "education":
+      return <SchoolIcon sx={{ color: "white", fontSize: 18 }} />;
+    case "healthcare":
+      return <LocalHospitalIcon sx={{ color: "white", fontSize: 18 }} />;
+    case "entertainment":
+      return <MovieIcon sx={{ color: "white", fontSize: 18 }} />;
+    case "transportation":
+      return <DirectionsTransitIcon sx={{ color: "white", fontSize: 18 }} />;
+    default:
+      return null;
+  }
+}
+
+function getIconWithName(type, name, distance, showLabel = true) {
+  const color = getColorForType(type);
+  const iconElement = getIconElement(type);
+  if (!iconElement) return null;
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        cursor: "pointer",
+      }}
+    >
+      <div
+        className="marker-icon-pulse"
+        style={{
+          width: 32,
+          height: 32,
+          borderRadius: "50%",
+          backgroundColor: color,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          border: "3px solid white",
+          flexShrink: 0,
+          "--marker-shadow": `${color}66`,
+        }}
+      >
+        {iconElement}
+      </div>
+
+      <div
+        title={`${name} - ${distance}`}
+        style={{
+          padding: "6px 12px",
+          fontSize: "13px",
+          fontWeight: 600,
+          color: "#1a1a1a",
+          backgroundColor: "white",
+          borderRadius: "6px",
+          maxWidth: 250,
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+          marginLeft: 10,
+          display: showLabel ? "flex" : "none",
+          flexDirection: "column",
+          gap: "2px",
+        }}
+      >
+        <span>{name}</span>
+        <span style={{ fontSize: "11px", color: "#666", fontWeight: 500 }}>
+          {distance}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 function CustomPlacesMarkers({ category }) {
   const map = useMap();
   const [showLabels, setShowLabels] = useState(true);
 
   useEffect(() => {
     if (!map) return;
-
-    const handleZoom = () => {
-      const currentZoom = map.getZoom();
-      setShowLabels(currentZoom >= 13);
-    };
-
+    const handleZoom = () => setShowLabels(map.getZoom() >= 13);
     const listener = map.addListener("zoom_changed", handleZoom);
     handleZoom();
-
-    return () => {
-      google.maps.event.removeListener(listener);
-    };
+    return () => google.maps.event.removeListener(listener);
   }, [map]);
 
   const locations = customLocations[category] || [];
 
   return (
     <>
+      <style>{MARKER_ANIMATION_STYLES}</style>
       {locations.map((place, index) => (
         <AdvancedMarker
           key={`${category}-${index}`}
-          position={{
-            lat: place.lat,
-            lng: place.lng,
-          }}
+          position={{ lat: place.lat, lng: place.lng }}
           title={`${place.name} - ${place.distance}`}
         >
           {getIconWithName(category, place.name, place.distance, showLabels)}
@@ -360,26 +376,73 @@ function CustomPlacesMarkers({ category }) {
   );
 }
 
-// Component to handle centering
-function MapCenterControl({ onCenter }) {
+function MapController({ selectedCategory, onMapReady }) {
   const map = useMap();
 
-  const handleCenter = () => {
-    if (map) {
-      map.panTo(center);
-      map.setZoom(13);
-      if (onCenter) onCenter();
-    }
-  };
+  useEffect(() => {
+    if (!map) return;
+    onMapReady(map);
 
-  return null;
+    const styledMapType = new window.google.maps.StyledMapType(
+      HIDE_POI_STYLES,
+      { name: "Clean Map" },
+    );
+    map.mapTypes.set("clean_map", styledMapType);
+    map.setMapTypeId("roadmap");
+  }, [map, onMapReady]);
+
+  useEffect(() => {
+    if (!map) return;
+    map.setMapTypeId(selectedCategory ? "clean_map" : "roadmap");
+  }, [map, selectedCategory]);
+
+  return (
+    <>
+      <style>{MARKER_ANIMATION_STYLES}</style>
+
+      {/* Main location marker */}
+      <AdvancedMarker position={center} title="Main Location">
+        <div
+          style={{
+            width: 48,
+            height: 48,
+            borderRadius: "50%",
+            backgroundColor: "#ffffff",
+            border: "2px solid #4285f4",
+            boxShadow: "0 2px 16px rgba(66, 133, 244, 3.8)",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          <img
+            src={MapLogo}
+            alt="Main Location Logo"
+            style={{
+              position: "absolute",
+              top: "56%",
+              left: "50%",
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+              transform: "translate(-50%, -50%) scale(2.5)",
+            }}
+          />
+        </div>
+      </AdvancedMarker>
+
+      {selectedCategory && <CustomPlacesMarkers category={selectedCategory} />}
+    </>
+  );
 }
 
-// Main map component
 export default function MapLocation() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showAll, setShowAll] = useState(false);
   const [mapInstance, setMapInstance] = useState(null);
+
+  const handleMapReady = useCallback((map) => {
+    setMapInstance(map);
+  }, []);
 
   const handleCategoryClick = (category) => {
     setShowAll(false);
@@ -411,6 +474,7 @@ export default function MapLocation() {
             <img src={Logo} alt="Mia Logo" />
           </a>
         </div>
+
         <div className="map-actions">
           <button
             onClick={() => handleCategoryClick("shopping")}
@@ -451,10 +515,6 @@ export default function MapLocation() {
             <DirectionsTransitIcon className="map-button-icon" />
             Transportation
           </button>
-
-          <div className="map-bg-container">
-            <img src={bg} alt="Meraaquii" className="map-bg-image" />
-          </div>
         </div>
 
         <button onClick={handleCenterClick} className="center-button">
@@ -472,44 +532,13 @@ export default function MapLocation() {
             zoomControl
             keyboardShortcuts
             disableDefaultUI={false}
-            onCameraChanged={(ev) => {
-              setMapInstance(ev.map);
-            }}
           >
-            {/* Main location marker with proper logo display */}
-            <AdvancedMarker position={center} title="Main Location">
-              <div
-                style={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: "50%",
-                  backgroundColor: "#ffffff",
-                  border: "2px solid #4285f4",
-                  boxShadow: "0 2px 16px rgba(66, 133, 244, 3.8)",
-                  position: "relative",
-                  overflow: "hidden",
-                }}
-              >
-                <img
-                  src={MapLogo}
-                  alt="Main Location Logo"
-                  style={{
-                    position: "absolute",
-                    top: "56%",
-                    left: "50%",
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain",
-                    transform: "translate(-50%, -50%) scale(2.5)",
-                  }}
-                />
-              </div>
-            </AdvancedMarker>
+            <MapController
+              selectedCategory={selectedCategory}
+              onMapReady={handleMapReady}
+            />
 
-            {/* Render markers based on selection */}
-            {selectedCategory && (
-              <CustomPlacesMarkers category={selectedCategory} />
-            )}
+            {/* Show-all markers */}
             {showAll && (
               <>
                 <CustomPlacesMarkers category="shopping" />
