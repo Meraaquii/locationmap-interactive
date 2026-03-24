@@ -214,19 +214,27 @@ const customLocations = {
   ],
 };
 
-// ── Animation ──────────────────────────────────────────────────────────────────
 const MARKER_ANIMATION_STYLES = `
   @keyframes markerPulse {
-    0%   { transform: scale(1);    box-shadow: 0 3px 8px var(--marker-shadow); }
-    50%  { transform: scale(1.25); box-shadow: 0 6px 12px var(--marker-shadow); }
-    100% { transform: scale(1);    box-shadow: 0 3px 8px var(--marker-shadow); }
+    0% {
+      transform: scale(1);
+      box-shadow: 0 0 6px 2px var(--marker-shadow);
+    }
+    50% {
+      transform: scale(1.2);
+      box-shadow: 0 0 14px 6px var(--marker-shadow);
+    }
+    100% {
+      transform: scale(1);
+      box-shadow: 0 0 6px 2px var(--marker-shadow);
+    }
   }
+
   .marker-icon-pulse {
     animation: markerPulse 1.8s ease-in-out infinite;
   }
 `;
 
-// ── Hide default Google POI icons ──────────────────────────────────────────────
 const HIDE_POI_STYLES = [
   {
     featureType: "poi",
@@ -311,7 +319,7 @@ function getIconWithName(type, name, distance, showLabel = true) {
           justifyContent: "center",
           border: "3px solid white",
           flexShrink: 0,
-          "--marker-shadow": `${color}66`,
+          "--marker-shadow": `#e73e3f33`,
         }}
       >
         {iconElement}
