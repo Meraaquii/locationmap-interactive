@@ -1,108 +1,4 @@
-.map-actions {
-  position: absolute;
-  bottom: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
-
-  background: rgba(0, 0, 0, 0.5);
-  padding: 8px 10px 8px;
-  border-radius: 14px;
-  border: 2px solid rgba(255, 255, 255, 0.8);
-
-  display: flex;
-  gap: 10px;
-
-  backdrop-filter: blur(6px);
-  overflow: hidden;
-}
-
-/* Glass color layer */
-.map-actions::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(255, 255, 255, 0.18);
-  border-radius: inherit;
-  z-index: 0; /* stay behind content */
-}
-
-/* .map-actions button {
-  padding: 10px 16px;
-  border: none;
-  border-radius: 999px;
-
-  background: #f1f5f9;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-
-  transition: all 0.25s ease;
-}
-
-.map-actions button:hover {
-  background: #1976d2;
-  color: white;
-  transform: translateY(-1px);
-} */
-
-.map-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  position: relative;
-  z-index: 2;
-  padding: 8px 14px;
-  border-radius: 10px;
-  border: none;
-
-  font-size: 14px;
-  font-weight: 500;
-  color: #ffffff;
-  cursor: pointer;
-
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    filter 0.2s ease;
-}
-
-.shopping {
-  background: #5b6c8f;
-  filter: brightness(1.25);
-}
-
-.education {
-  background: #2f6db2;
-  filter: brightness(1.25);
-}
-
-.healthcare {
-  background: #1f9e84;
-  filter: brightness(1.25);
-}
-
-.entertainment {
-  background: #6b4fa3;
-  filter: brightness(1.25);
-}
-
-.transportation {
-  background: #e67e22;
-  filter: brightness(1.25);
-}
-
-.map-btn:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.25);
-  /* box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25); */
-}
-
-.map-btn.active {
-  filter: brightness(1.25);
-  box-shadow: 0 0 0 2px #ffffff inset;
-  /* border: #51769e 2px solid; */
-}
+/* ─── Page & map wrapper ─────────────────────────────────── */
 .map-page {
   width: 100%;
   height: 100vh;
@@ -121,6 +17,199 @@
   touch-action: none !important;
 }
 
+/* ─── Logo ───────────────────────────────────────────────── */
+.map-logo {
+  position: absolute;
+  bottom: 25px;
+  left: 16px;
+  z-index: 1000;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.map-logo img {
+  height: 48px;
+  width: auto;
+  opacity: 0.95;
+}
+
+/* ─── Right panel wrapper ────────────────────────────────── */
+.map-actions-right {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+/* ─── Left panel wrapper ─────────────────────────────────── */
+.map-actions-left {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+}
+
+/* ─── Arrow toggle tabs (Common Styles) ──────────────────── */
+.map-panel-toggle,
+.map-panel-toggle-left {
+  width: 24px;
+  height: 62px;
+  border: 2px solid rgba(255, 255, 255, 0.75);
+  background: rgba(0, 0, 0, 0.52);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.map-panel-toggle {
+  border-right: none;
+  border-radius: 8px 0 0 8px;
+}
+
+.map-panel-toggle-left {
+  border-left: none;
+  border-radius: 0 8px 8px 0;
+}
+
+.map-panel-toggle:hover,
+.map-panel-toggle-left:hover {
+  background: rgba(0, 0, 0, 0.7);
+  border-color: rgba(255, 255, 255, 1);
+}
+
+/* ─── Sliding icon panels (Common Styles) ────────────────── */
+.map-actions-panel,
+.map-actions-panel-left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  background: rgba(0, 0, 0, 0.52);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  border: 2px solid rgba(255, 255, 255, 0.75);
+  padding: 18px 12px;
+  overflow: hidden;
+
+  max-width: 82px;
+  opacity: 1;
+  transition:
+    max-width 0.32s ease,
+    opacity 0.28s ease,
+    padding 0.32s ease,
+    border 0.2s ease;
+}
+
+.map-actions-panel {
+  border-right: none;
+  border-radius: 14px 0 0 14px;
+}
+
+.map-actions-panel-left {
+  border-left: none;
+  border-radius: 0 14px 14px 0;
+}
+
+.map-actions-panel.closed,
+.map-actions-panel-left.closed {
+  max-width: 0;
+  opacity: 0;
+  padding: 18px 0;
+  border: 2px solid transparent;
+}
+
+/* ─── Icon-only buttons ──────────────────────────────────── */
+.map-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  transition:
+    transform 0.2s ease,
+    filter 0.2s ease;
+}
+
+.map-button-icon {
+  font-size: 28px !important;
+  color: white;
+  flex-shrink: 0;
+  display: block !important;
+}
+
+/* ─── Button colors ──────────────────────────────────────── */
+.shopping {
+  background: #5b6c8f;
+  filter: brightness(1.25);
+}
+.education {
+  background: #2f6db2;
+  filter: brightness(1.25);
+}
+.healthcare {
+  background: #e02525;
+}
+.entertainment {
+  background: #6b4fa3;
+  filter: brightness(1.25);
+}
+.transportation {
+  background: #e67e22;
+  filter: brightness(1.25);
+}
+
+.map-btn:hover {
+  transform: scale(1.05);
+  filter: brightness(1.4);
+}
+
+.map-btn.active {
+  box-shadow: 0 0 0 2px #ffffff inset;
+}
+
+/* ─── Center / reset button ──────────────────────────────── */
+.center-button {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.center-button:hover {
+  transform: scale(1.08);
+}
+
+/* ─── Map controls (legacy, kept for safety) ─────────────── */
 .map-controls-bottom {
   position: absolute;
   bottom: 20px;
@@ -135,7 +224,7 @@
   z-index: 1000;
   flex-wrap: wrap;
   justify-content: center;
-  pointer-events: auto; /* Ensure buttons are clickable */
+  pointer-events: auto;
 }
 
 .map-controls-bottom button:hover {
@@ -149,188 +238,94 @@
   border-color: #4285f4;
 }
 
-.map-actions button {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  font-size: 14px;
-}
-
-.map-button-icon {
-  font-size: 20px;
-  color: white;
-}
-
-.center-button {
-  position: absolute;
-  left: 77%;
-  /* transform: translateX(260px);  */
-  bottom: 18px;
-  z-index: 1000;
-
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background-color: #1976d2;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.center-button:hover {
-  transform: scale(1.08);
-}
-
-.map-page {
-  height: 100vh;
-  width: 100vw;
-  position: relative;
-}
-
-.map-logo {
-  position: absolute;
-  bottom: 16px;
-  left: 16px;
-  z-index: 1000;
-  pointer-events: auto;
-  cursor: pointer;
-}
-
-.map-logo img {
-  height: 48px;
-  width: auto;
-  opacity: 0.95;
-}
-.map-bg-container {
-  position: absolute;
-  bottom: 4px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-  pointer-events: auto;
-}
-.map-bg-container::before {
-  content: "";
-  position: absolute;
-  top: -6px;
-  left: -40px;
-  right: -40px;
-  height: 1px;
-  background: linear-gradient(
-    to right,
-    transparent,
-    rgba(231, 62, 63, 0.35),
-    transparent
-  );
-}
-
-.map-bg-image {
-  height: 22px;
-  width: auto;
-  opacity: 0.9;
-  user-select: none;
-}
-
-@media (max-width: 1600px) {
-  .map-actions {
-    gap: 9px;
-    padding: 9px 13px;
-  }
-
-  .map-btn {
-    padding: 7px 13px;
-    font-size: 13.5px;
-  }
-
-  .map-button-icon {
-    font-size: 19px;
-  }
-
-  .center-button {
-    bottom: 20px;
-  }
-}
-
+/* ─── Responsive  ─────────────────── */
 @media (max-width: 1200px) {
-  .map-actions {
-    gap: 8px;
-    padding: 8px 12px;
-  }
-
-  .map-btn {
-    padding: 6px 12px;
-    font-size: 13px;
-  }
-
-  .map-button-icon {
-    font-size: 18px;
-  }
-
+  .map-btn,
   .center-button {
-    bottom: 96px;
+    width: 52px;
+    height: 52px;
+    padding: 11px;
+  }
+  .map-button-icon {
+    font-size: 26px !important;
+  }
+  .map-actions-panel,
+  .map-actions-panel-left {
+    max-width: 78px;
+    padding: 16px 11px;
+    gap: 11px;
+  }
+  .map-panel-toggle,
+  .map-panel-toggle-left {
+    height: 58px;
   }
 }
 
 @media (max-width: 992px) {
-  .map-actions {
-    flex-wrap: wrap;
-    max-width: 90%;
-    justify-content: center;
-  }
-
-  .map-btn {
-    flex: 1 1 auto;
-    white-space: nowrap;
-  }
-
+  .map-btn,
   .center-button {
-    bottom: 120px;
-    right: 16px;
+    width: 48px;
+    height: 48px;
+    padding: 10px;
+  }
+  .map-button-icon {
+    font-size: 24px !important;
+  }
+  .map-actions-panel,
+  .map-actions-panel-left {
+    max-width: 74px;
+    padding: 14px 10px;
+    gap: 10px;
+  }
+  .map-panel-toggle,
+  .map-panel-toggle-left {
+    height: 56px;
+    width: 22px;
   }
 }
 
 @media (max-width: 768px) {
-  .map-actions {
-    width: calc(100% - 20px);
-    left: 10px;
-    transform: none;
-    bottom: 16px;
-    border-radius: 12px;
-  }
-
-  .map-btn {
-    font-size: 12px;
-    padding: 6px 10px;
-  }
-
+  .map-btn,
   .center-button {
-    bottom: 140px;
     width: 44px;
     height: 44px;
+    padding: 9px;
+  }
+  .map-button-icon {
+    font-size: 22px !important;
+  }
+  .map-actions-panel,
+  .map-actions-panel-left {
+    max-width: 68px;
+    gap: 10px;
+    padding: 12px 9px;
+  }
+  .map-panel-toggle,
+  .map-panel-toggle-left {
+    height: 52px;
+    width: 22px;
   }
 }
 
 @media (max-width: 480px) {
-  .map-actions {
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .map-btn {
-    width: 100%;
-    justify-content: center;
-  }
+  .map-btn,
   .center-button {
-    bottom: 160px;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+  }
+  .map-button-icon {
+    font-size: 20px !important;
+  }
+  .map-actions-panel,
+  .map-actions-panel-left {
+    max-width: 62px;
+    gap: 8px;
+    padding: 10px 8px;
+  }
+  .map-panel-toggle,
+  .map-panel-toggle-left {
+    height: 48px;
+    width: 20px;
   }
 }

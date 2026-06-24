@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./MapLocation.css";
+
 import SchoolIcon from "@mui/icons-material/School";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import MovieIcon from "@mui/icons-material/Movie";
@@ -17,6 +18,7 @@ import {
   AdvancedMarker,
   useMap,
 } from "@vis.gl/react-google-maps";
+
 import { APIKEY } from "../Context";
 
 const center = { lat: 22.423285, lng: 88.39801 };
@@ -428,8 +430,7 @@ export default function MapLocation() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showAll, setShowAll] = useState(false);
   const [mapInstance, setMapInstance] = useState(null);
-  const [showRightPanel, setShowRightPanel] = useState(true);
-  const [showLeftPanel, setShowLeftPanel] = useState(false);
+  const [showPanel, setShowPanel] = useState(true);
 
   const handleMapReady = useCallback((map) => {
     setMapInstance(map);
@@ -453,28 +454,6 @@ export default function MapLocation() {
     }
   };
 
-  // Right panel toggle — jab right close ho to left open ho jaye
-  const toggleRightPanel = () => {
-    if (showRightPanel) {
-      setShowRightPanel(false);
-      setShowLeftPanel(true);
-    } else {
-      setShowRightPanel(true);
-      setShowLeftPanel(false);
-    }
-  };
-
-  // Left panel toggle — jab left close ho to right open ho jaye
-  const toggleLeftPanel = () => {
-    if (showLeftPanel) {
-      setShowLeftPanel(false);
-      setShowRightPanel(true);
-    } else {
-      setShowLeftPanel(true);
-      setShowRightPanel(false);
-    }
-  };
-
   return (
     <APIProvider apiKey={APIKEY}>
       <div className="map-page">
@@ -489,83 +468,21 @@ export default function MapLocation() {
           </a>
         </div>
 
-        {/* ================= LEFT SIDE PANEL ================= */}
-        <div className="map-actions-left">
-          <button
-            className="map-panel-toggle-left"
-            onClick={toggleLeftPanel}
-            title={
-              showLeftPanel ? "Hide left categories" : "Show left categories"
-            }
-          >
-            {showLeftPanel ? (
-              <ChevronLeftIcon style={{ fontSize: 20, color: "white" }} />
-            ) : (
-              <ChevronRightIcon style={{ fontSize: 20, color: "white" }} />
-            )}
-          </button>
-
-          <div
-            className={`map-actions-panel-left ${showLeftPanel ? "open" : "closed"}`}
-          >
-            <button
-              onClick={() => handleCategoryClick("shopping")}
-              className={`map-btn shopping ${selectedCategory === "shopping" ? "active" : ""}`}
-              title="Shopping & Daily Needs"
-            >
-              <ShoppingCartIcon className="map-button-icon" />
-            </button>
-            <button
-              onClick={() => handleCategoryClick("education")}
-              className={`map-btn education ${selectedCategory === "education" ? "active" : ""}`}
-              title="Educational Institutions"
-            >
-              <SchoolIcon className="map-button-icon" />
-            </button>
-            <button
-              onClick={() => handleCategoryClick("healthcare")}
-              className={`map-btn healthcare ${selectedCategory === "healthcare" ? "active" : ""}`}
-              title="Hospital & Healthcare"
-            >
-              <LocalHospitalIcon className="map-button-icon" />
-            </button>
-            <button
-              onClick={() => handleCategoryClick("entertainment")}
-              className={`map-btn entertainment ${selectedCategory === "entertainment" ? "active" : ""}`}
-              title="Multiplex & Entertainment"
-            >
-              <MovieIcon className="map-button-icon" />
-            </button>
-            <button
-              onClick={() => handleCategoryClick("transportation")}
-              className={`map-btn transportation ${selectedCategory === "transportation" ? "active" : ""}`}
-              title="Transportation"
-            >
-              <DirectionsTransitIcon className="map-button-icon" />
-            </button>
-            <button onClick={handleCenterClick} className="center-button">
-              <MyLocationIcon className="map-button-icon" />
-            </button>
-          </div>
-        </div>
-
-        {/* ================= RIGHT SIDE PANEL ================= */}
         <div className="map-actions-right">
           <button
             className="map-panel-toggle"
-            onClick={toggleRightPanel}
-            title={showRightPanel ? "Hide categories" : "Show categories"}
+            onClick={() => setShowPanel((p) => !p)}
+            title={showPanel ? "Hide categories" : "Show categories"}
           >
-            {showRightPanel ? (
+            {showPanel ? (
               <ChevronRightIcon style={{ fontSize: 20, color: "white" }} />
             ) : (
               <ChevronLeftIcon style={{ fontSize: 20, color: "white" }} />
             )}
           </button>
 
-          <div
-            className={`map-actions-panel ${showRightPanel ? "open" : "closed"}`}
-          >
+          {/* Sliding icon panel */}
+          <div className={`map-actions-panel ${showPanel ? "open" : "closed"}`}>
             <button
               onClick={() => handleCategoryClick("shopping")}
               className={`map-btn shopping ${selectedCategory === "shopping" ? "active" : ""}`}
@@ -573,6 +490,7 @@ export default function MapLocation() {
             >
               <ShoppingCartIcon className="map-button-icon" />
             </button>
+
             <button
               onClick={() => handleCategoryClick("education")}
               className={`map-btn education ${selectedCategory === "education" ? "active" : ""}`}
@@ -580,6 +498,7 @@ export default function MapLocation() {
             >
               <SchoolIcon className="map-button-icon" />
             </button>
+
             <button
               onClick={() => handleCategoryClick("healthcare")}
               className={`map-btn healthcare ${selectedCategory === "healthcare" ? "active" : ""}`}
@@ -587,6 +506,7 @@ export default function MapLocation() {
             >
               <LocalHospitalIcon className="map-button-icon" />
             </button>
+
             <button
               onClick={() => handleCategoryClick("entertainment")}
               className={`map-btn entertainment ${selectedCategory === "entertainment" ? "active" : ""}`}
@@ -594,6 +514,7 @@ export default function MapLocation() {
             >
               <MovieIcon className="map-button-icon" />
             </button>
+
             <button
               onClick={() => handleCategoryClick("transportation")}
               className={`map-btn transportation ${selectedCategory === "transportation" ? "active" : ""}`}
@@ -601,13 +522,14 @@ export default function MapLocation() {
             >
               <DirectionsTransitIcon className="map-button-icon" />
             </button>
+
+            {/* ✅ Center button now inside panel */}
             <button onClick={handleCenterClick} className="center-button">
               <MyLocationIcon className="map-button-icon" />
             </button>
           </div>
         </div>
 
-        {/* Map Wrapper */}
         <div className="map-wrapper">
           <Map
             defaultCenter={center}
