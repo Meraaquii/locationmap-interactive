@@ -1,0 +1,28 @@
+/* Font-face declaration MUST come FIRST */
+@font-face {
+  font-family: "MyFont";
+  src: url("fonts/LINEARGROTESK-REGULAR.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap; /* This helps with immediate display */
+}
+
+/* Apply to ALL elements */
+* {
+  font-family: "MyFont", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Specific body rule for extra assurance */
+body {
+  font-family: "MyFont", Arial, sans-serif !important;
+}

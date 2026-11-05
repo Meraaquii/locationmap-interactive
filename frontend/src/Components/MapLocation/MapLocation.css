@@ -1,0 +1,426 @@
+/* ─── Page & map wrapper ─────────────────────────────────── */
+.map-page {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.map-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.map-wrapper > div {
+  pointer-events: auto !important;
+  touch-action: none !important;
+}
+
+/* ─── Logo ───────────────────────────────────────────────── */
+.map-logo {
+  position: absolute;
+  bottom: 25px;
+  left: 16px;
+  z-index: 1000;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.map-logo img {
+  height: 48px;
+  width: auto;
+  opacity: 0.95;
+}
+
+/* ─── Right panel wrapper ────────────────────────────────── */
+.map-actions-right {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+/* ─── Left panel wrapper ─────────────────────────────────── */
+.map-actions-left {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+}
+
+/* ─── Arrow toggle tabs (Common Styles) ──────────────────── */
+.map-panel-toggle,
+.map-panel-toggle-left {
+  width: 24px;
+  height: 62px;
+  border: 2px solid rgba(255, 255, 255, 0.75);
+  background: rgba(0, 0, 0, 0.52);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.map-panel-toggle {
+  border-right: none;
+  border-radius: 8px 0 0 8px;
+}
+
+.map-panel-toggle-left {
+  border-left: none;
+  border-radius: 0 8px 8px 0;
+}
+
+.map-panel-toggle:hover,
+.map-panel-toggle-left:hover {
+  background: rgba(0, 0, 0, 0.7);
+  border-color: rgba(255, 255, 255, 1);
+}
+
+/* ─── Sliding icon panels (Common Styles) ────────────────── */
+.map-actions-panel,
+.map-actions-panel-left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  background: rgba(0, 0, 0, 0.52);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  border: 2px solid rgba(255, 255, 255, 0.75);
+  padding: 18px 12px;
+  overflow: hidden;
+
+  max-width: 82px;
+  opacity: 1;
+  transition:
+    max-width 0.32s ease,
+    opacity 0.28s ease,
+    padding 0.32s ease,
+    border 0.2s ease;
+}
+
+.map-actions-panel {
+  border-right: none;
+  border-radius: 14px 0 0 14px;
+}
+
+.map-actions-panel-left {
+  border-left: none;
+  border-radius: 0 14px 14px 0;
+}
+
+.map-actions-panel.closed,
+.map-actions-panel-left.closed {
+  max-width: 0;
+  opacity: 0;
+  padding: 18px 0;
+  border: 2px solid transparent;
+}
+
+/* ─── Icon-only buttons ──────────────────────────────────── */
+.map-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  transition:
+    transform 0.2s ease,
+    filter 0.2s ease;
+}
+
+.map-button-icon {
+  font-size: 28px !important;
+  color: white;
+  flex-shrink: 0;
+  display: block !important;
+}
+
+/* ─── Button colors ──────────────────────────────────────── */
+.shopping {
+  background: #5b6c8f;
+  filter: brightness(1.25);
+}
+.education {
+  background: #2f6db2;
+  filter: brightness(1.25);
+}
+.healthcare {
+  background: #e02525;
+}
+.entertainment {
+  background: #6b4fa3;
+  filter: brightness(1.25);
+}
+.transportation {
+  background: #e67e22;
+  filter: brightness(1.25);
+}
+
+.map-btn:hover {
+  transform: scale(1.05);
+  filter: brightness(1.4);
+}
+
+.map-btn.active {
+  box-shadow: 0 0 0 2px #ffffff inset;
+}
+
+/* ─── Center / reset button ──────────────────────────────── */
+.center-button {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.center-button:hover {
+  transform: scale(1.08);
+}
+
+/* ─── Map controls (legacy, kept for safety) ─────────────── */
+.map-controls-bottom {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  background: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  flex-wrap: wrap;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.map-controls-bottom button:hover {
+  background: #f5f5f5;
+  border-color: #999;
+}
+
+.map-controls-bottom button.active {
+  background: #4285f4;
+  color: white;
+  border-color: #4285f4;
+}
+
+/* ─── Responsive  ─────────────────── */
+@media (max-width: 1200px) {
+  .map-btn,
+  .center-button {
+    width: 52px;
+    height: 52px;
+    padding: 11px;
+  }
+  .map-button-icon {
+    font-size: 26px !important;
+  }
+  .map-actions-panel,
+  .map-actions-panel-left {
+    max-width: 78px;
+    padding: 16px 11px;
+    gap: 11px;
+  }
+  .map-panel-toggle,
+  .map-panel-toggle-left {
+    height: 58px;
+  }
+}
+
+@media (max-width: 992px) {
+  .map-btn,
+  .center-button {
+    width: 48px;
+    height: 48px;
+    padding: 10px;
+  }
+  .map-button-icon {
+    font-size: 24px !important;
+  }
+  .map-actions-panel,
+  .map-actions-panel-left {
+    max-width: 74px;
+    padding: 14px 10px;
+    gap: 10px;
+  }
+  .map-panel-toggle,
+  .map-panel-toggle-left {
+    height: 56px;
+    width: 22px;
+  }
+}
+
+@media (max-width: 768px) {
+  .map-btn,
+  .center-button {
+    width: 44px;
+    height: 44px;
+    padding: 9px;
+  }
+  .map-button-icon {
+    font-size: 22px !important;
+  }
+  .map-actions-panel,
+  .map-actions-panel-left {
+    max-width: 68px;
+    gap: 10px;
+    padding: 12px 9px;
+  }
+  .map-panel-toggle,
+  .map-panel-toggle-left {
+    height: 52px;
+    width: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .map-btn,
+  .center-button {
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+  }
+  .map-button-icon {
+    font-size: 20px !important;
+  }
+  .map-actions-panel,
+  .map-actions-panel-left {
+    max-width: 62px;
+    gap: 8px;
+    padding: 10px 8px;
+  }
+  .map-panel-toggle,
+  .map-panel-toggle-left {
+    height: 48px;
+    width: 20px;
+  }
+}
+
+/* ─── Main project pin (Fortune Ikigai logo) ─────────────── */
+.main-pin {
+  --pin-navy: #221f5c;
+  --pin-orange: #f37b20;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: var(--pin-w);
+  transition: width 0.2s ease;
+  filter: drop-shadow(0 6px 12px rgba(34, 31, 92, 0.35));
+  cursor: pointer;
+}
+
+.main-pin-card {
+  width: 100%;
+  background: #ffffff;
+  border: 2px solid var(--pin-navy);
+  border-bottom: 3px solid var(--pin-orange);
+  border-radius: 10px;
+  padding: 7% 9%;
+  box-sizing: border-box;
+}
+
+/* Crop Logo-1.png (2000x1125) to its artwork box x310-1725, y205-825 */
+.main-pin-logo {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1415 / 620;
+  overflow: hidden;
+}
+
+.main-pin-logo img {
+  position: absolute;
+  width: 141.34%;
+  left: -21.91%;
+  top: -33.07%;
+  height: auto;
+  display: block;
+}
+
+.main-pin-pointer {
+  width: 0;
+  height: 0;
+  border-left: calc(var(--pin-w) * 0.07) solid transparent;
+  border-right: calc(var(--pin-w) * 0.07) solid transparent;
+  border-top: calc(var(--pin-w) * 0.09) solid var(--pin-orange);
+  margin-top: -1px;
+}
+
+.main-pin-pulse {
+  position: absolute;
+  bottom: calc(var(--pin-w) * -0.04);
+  width: calc(var(--pin-w) * 0.12);
+  height: calc(var(--pin-w) * 0.05);
+  border-radius: 50%;
+  background: rgba(243, 123, 32, 0.55);
+  animation: mainPinPulse 1.8s ease-out infinite;
+  z-index: -1;
+}
+
+@keyframes mainPinPulse {
+  0% { transform: scale(1); opacity: 0.9; }
+  100% { transform: scale(4); opacity: 0; }
+}
+
+.main-pin:hover .main-pin-card {
+  border-color: var(--pin-orange);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .main-pin-pulse { animation: none; }
+}
+
+/* ─── Multi-icon category button (e.g. temple + church + sweets) ─── */
+.map-btn.map-btn-multi {
+  flex-wrap: wrap;
+  align-content: center;
+  gap: 1px;
+  padding: 6px;
+}
+
+.map-button-icon-sm {
+  font-size: 18px !important;
+  color: white;
+  display: block !important;
+}
+
+@media (max-width: 1024px) {
+  .map-button-icon-sm { font-size: 16px !important; }
+}
+@media (max-width: 600px) {
+  .map-button-icon-sm { font-size: 14px !important; }
+}
