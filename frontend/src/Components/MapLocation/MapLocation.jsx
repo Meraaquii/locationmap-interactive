@@ -15,51 +15,69 @@ import {
   APIProvider,
   Map,
   AdvancedMarker,
+  AdvancedMarkerAnchorPoint,
   useMap,
 } from "@vis.gl/react-google-maps";
 import { APIKEY } from "../Context";
 
-const center = { lat: 22.423285, lng: 88.39801 };
+const center = { lat: 22.4236796, lng: 88.397762 };
 
 const customLocations = {
   shopping: [
     {
       name: "Wood Square Mall",
-      distance: "2.3 KM",
+      distance: "2.6 KM",
       lat: 22.4396507,
       lng: 88.3971364,
     },
     {
       name: "Southwinds Galleria Mall",
-      distance: "4 KM",
+      distance: "3 KM",
       lat: 22.4083406,
       lng: 88.4125458,
     },
     {
-      name: "Metropolish Mall",
+      name: "Metropolis Mall",
       distance: "7.5 KM",
-      lat: 22.48327468,
-      lng: 88.3906139994,
+      lat: 22.48336468,
+      lng: 88.39078824,
     },
-    { name: "Spencer", distance: "2 KM", lat: 22.4366561, lng: 88.3938879 },
-    { name: "Tata Chroma", distance: "2 KM", lat: 22.4369944, lng: 88.3938843 },
+    { name: "Spencers", distance: "1.8 KM", lat: 22.4366761, lng: 88.3938679 },
+    {
+      name: "Tata Croma",
+      distance: "1.9 KM",
+      lat: 22.4369944,
+      lng: 88.3938643,
+    },
     {
       name: "Rajpur Bazaar",
-      distance: "1.7 KM",
+      distance: "1.8 KM",
       lat: 22.4229997,
       lng: 88.4103727,
+    },
+    {
+      name: "Acropolis Mall",
+      distance: "12.7 KM",
+      lat: 22.5151592,
+      lng: 88.3934189,
+    },
+    {
+      name: "South City Mall",
+      distance: "12.2 KM",
+      lat: 22.504910098938645,
+      lng: 88.36213045803764,
     },
   ],
   education: [
     {
-      name: "Lions Vidyamandir",
+      name: "Lions Vidya Mandir",
       distance: "2 KM",
       lat: 22.4157326,
       lng: 88.4077388,
     },
     {
       name: "Delhi World Public School",
-      distance: "5.4 KM",
+      distance: "3.1 KM",
       lat: 22.4302068,
       lng: 88.3859974,
     },
@@ -77,19 +95,19 @@ const customLocations = {
     },
     {
       name: "BD Memorial School",
-      distance: "3.9 KM",
+      distance: "5.8 KM",
       lat: 22.4675214,
       lng: 88.3779972,
     },
     {
       name: "Future Institute Engineering",
-      distance: "5.8 KM",
-      lat: 22.4433497,
-      lng: 88.4154285,
+      distance: "3.9 KM",
+      lat: 22.4433597,
+      lng: 88.4153185,
     },
     {
-      name: "Netaji Subhas Eng College",
-      distance: "8.8 KM",
+      name: "Netaji Subhash Eng College",
+      distance: "8.3 KM",
       lat: 22.4762788,
       lng: 88.4149452,
     },
@@ -103,25 +121,25 @@ const customLocations = {
     },
     {
       name: "RN Tagore Hospital",
-      distance: "9.1 KM",
+      distance: "9 KM",
       lat: 22.4912281,
       lng: 88.4024062,
     },
     {
-      name: "Apollo Hospital (Upcoming)",
-      distance: "1 KM",
+      name: "Apollo Hospital",
+      distance: "2.3 KM",
       lat: 22.4305,
       lng: 88.4025,
     },
     {
       name: "Medica Hospital",
-      distance: "9.3 KM",
-      lat: 22.4942277,
-      lng: 88.400696,
+      distance: "9.4 KM",
+      lat: 22.4942987,
+      lng: 88.400708,
     },
     {
       name: "Hindustan Health Point",
-      distance: "5.8 KM",
+      distance: "5.4 KM",
       lat: 22.4583119,
       lng: 88.3834594,
     },
@@ -135,71 +153,92 @@ const customLocations = {
   entertainment: [
     {
       name: "Highland Park (Inox)",
-      distance: "7.5 KM",
+      distance: "7.6 KM",
       lat: 22.4833577,
       lng: 88.3907365,
     },
     {
       name: "Wood Square Mall (SVF)",
-      distance: "2.3 KM",
+      distance: "2.8 KM",
       lat: 22.4396507,
       lng: 88.3971364,
+    },
+
+    {
+      name: "Acropolis Mall (PVR)",
+      distance: "12.7 KM",
+      lat: 22.5151592,
+      lng: 88.3934189,
+    },
+    {
+      name: "South City Mall (Inox)",
+      distance: "12.2 KM",
+      lat: 22.504910098938645,
+      lng: 88.36213045803764,
     },
   ],
   transportation: [
     {
       name: "Shahid Khudiram Metro",
-      distance: "5.4 KM",
+      distance: "5.6 KM",
       lat: 22.4660094,
       lng: 88.3916655,
     },
     {
       name: "Sonarpur Railway Station",
-      distance: "4.9 KM",
+      distance: "4.8 KM",
       lat: 22.4429798,
       lng: 88.4305441,
     },
     {
-      name: "Southern Bypass",
+      name: "Rathtala More",
+      entry: "Exit And Entry 2",
       distance: "450 MTR",
-      lat: 22.4226082,
-      lng: 88.4035077,
+      lat: 22.4275291,
+      lng: 88.40161,
+    },
+    {
+      name: "Jagaddal More",
+      entry: "Exit And Entry 1",
+      distance: "750 MTR",
+      lat: 22.4245343,
+      lng: 88.404685,
     },
     {
       name: "Ruby Crossing",
-      distance: "11.1 KM",
+      distance: "11.3 KM",
       lat: 22.5141121,
       lng: 88.4025735,
     },
     {
       name: "Kamalgazi Flyover",
       distance: "2.9 KM",
-      lat: 22.4461934,
-      lng: 88.3912494,
+      lat: 22.4461954,
+      lng: 88.3912694,
     },
     {
       name: "Sealdah Station",
-      distance: "19 KM",
+      distance: "18.8 KM",
       lat: 22.567792,
       lng: 88.3710203,
     },
     {
       name: "Howrah Station",
-      distance: "29.3 KM",
+      distance: "29.2 KM",
       lat: 22.5830002,
       lng: 88.3372909,
     },
     {
       name: "NSCB Airport",
-      distance: "29.7 KM",
+      distance: "31 KM",
       lat: 22.653564,
       lng: 88.4450847,
     },
     {
       name: "Garia Crossing",
-      distance: "6.8 KM",
-      lat: 22.46578,
-      lng: 88.377919,
+      distance: "1.8 KM",
+      lat: 22.4226394,
+      lng: 88.4104497,
     },
   ],
 };
@@ -256,79 +295,99 @@ function getColorForType(type) {
   return colors[type] || "#5b6c8f";
 }
 
-function getIconElement(type) {
+function getIconElement(type, size = 18) {
+  const iconStyle = { color: "white", fontSize: size };
   switch (type) {
     case "shopping":
-      return <ShoppingCartIcon sx={{ color: "white", fontSize: 18 }} />;
+      return <ShoppingCartIcon sx={iconStyle} />;
     case "education":
-      return <SchoolIcon sx={{ color: "white", fontSize: 18 }} />;
+      return <SchoolIcon sx={iconStyle} />;
     case "healthcare":
-      return <LocalHospitalIcon sx={{ color: "white", fontSize: 18 }} />;
+      return <LocalHospitalIcon sx={iconStyle} />;
     case "entertainment":
-      return <MovieIcon sx={{ color: "white", fontSize: 18 }} />;
+      return <MovieIcon sx={iconStyle} />;
     case "transportation":
-      return <DirectionsTransitIcon sx={{ color: "white", fontSize: 18 }} />;
+      return <DirectionsTransitIcon sx={iconStyle} />;
     default:
       return null;
   }
 }
 
-function getIconWithName(type, name, distance, showLabel = true) {
+function getIconWithName(
+  type,
+  name,
+  distance,
+  entry,
+  showLabel = true,
+  iconSize = 42,
+) {
   const color = getColorForType(type);
-  const iconElement = getIconElement(type);
+  const iconElement = getIconElement(type, Math.round(iconSize * 0.43));
   if (!iconElement) return null;
 
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        cursor: "pointer",
+        position: "relative",
+        width: iconSize,
+        height: iconSize,
       }}
     >
       <div
         className="marker-icon-pulse"
         style={{
-          width: 42,
-          height: 42,
+          width: iconSize,
+          height: iconSize,
           borderRadius: "50%",
           backgroundColor: color,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           border: "3px solid white",
-          flexShrink: 0,
+          boxSizing: "border-box",
           "--marker-shadow": `#e73e3f33`,
         }}
       >
         {iconElement}
       </div>
-      <div
-        title={`${name} - ${distance}`}
-        style={{
-          padding: "6px 12px",
-          fontSize: "18px",
-          fontWeight: 700,
-          color: "#1a1a1a",
-          backgroundColor: "white",
-          borderRadius: "6px",
-          maxWidth: 250,
-          whiteSpace: "nowrap",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-          marginLeft: 10,
-          display: showLabel ? "flex" : "none",
-          flexDirection: "column",
-          gap: "2px",
-        }}
-      >
-        <span>{name}</span>
-        <span style={{ fontSize: "11px", color: "#666", fontWeight: 500 }}>
-          {distance}
-        </span>
-      </div>
+
+      {showLabel && (
+        <div
+          title={`${name}${entry ? " - " + entry : ""} - ${distance}`}
+          style={{
+            position: "absolute",
+            left: "100%",
+            top: "50%",
+            transform: "translateY(-50%)",
+            marginLeft: 12,
+            padding: "10px 18px",
+            fontSize: "24px",
+            fontWeight: 700,
+            color: "#1a1a1a",
+            backgroundColor: "white",
+            borderRadius: "8px",
+            width: "max-content",
+            whiteSpace: "nowrap",
+            boxShadow: "0 3px 10px rgba(0,0,0,0.25)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "4px",
+            pointerEvents: "none",
+          }}
+        >
+          <span>{name}</span>
+          {entry && (
+            <span
+              style={{ fontSize: "15px", color: "#e02525", fontWeight: 600 }}
+            >
+              {entry}
+            </span>
+          )}
+          <span style={{ fontSize: "15px", color: "#666", fontWeight: 500 }}>
+            {distance}
+          </span>
+        </div>
+      )}
     </div>
   );
 }
@@ -336,16 +395,25 @@ function getIconWithName(type, name, distance, showLabel = true) {
 function CustomPlacesMarkers({ category }) {
   const map = useMap();
   const [showLabels, setShowLabels] = useState(true);
+  const [zoom, setZoom] = useState(13);
 
   useEffect(() => {
     if (!map) return;
-    const handleZoom = () => setShowLabels(map.getZoom() >= 13);
+    const handleZoom = () => {
+      const z = map.getZoom();
+      setZoom(z);
+      setShowLabels(z >= 13);
+    };
     const listener = map.addListener("zoom_changed", handleZoom);
     handleZoom();
     return () => google.maps.event.removeListener(listener);
   }, [map]);
 
   const locations = customLocations[category] || [];
+
+  const baseSize = 48;
+  const scaledSize = Math.round(baseSize * Math.pow(1.4, zoom - 13));
+  const clampedSize = Math.max(26, Math.min(scaledSize, 105));
 
   return (
     <>
@@ -354,9 +422,17 @@ function CustomPlacesMarkers({ category }) {
         <AdvancedMarker
           key={`${category}-${index}`}
           position={{ lat: place.lat, lng: place.lng }}
-          title={`${place.name} - ${place.distance}`}
+          title={`${place.name}${place.entry ? " - " + place.entry : ""} - ${place.distance}`}
+          anchorPoint={AdvancedMarkerAnchorPoint.CENTER}
         >
-          {getIconWithName(category, place.name, place.distance, showLabels)}
+          {getIconWithName(
+            category,
+            place.name,
+            place.distance,
+            place.entry,
+            showLabels,
+            clampedSize,
+          )}
         </AdvancedMarker>
       ))}
     </>
@@ -397,7 +473,11 @@ function MapController({ selectedCategory, onMapReady }) {
   return (
     <>
       <style>{MARKER_ANIMATION_STYLES}</style>
-      <AdvancedMarker position={center} title="Main Location">
+      <AdvancedMarker
+        position={center}
+        title="Main Location"
+        anchorPoint={AdvancedMarkerAnchorPoint.CENTER}
+      >
         <div
           style={{
             width: clampedSize,
@@ -409,6 +489,7 @@ function MapController({ selectedCategory, onMapReady }) {
             alignItems: "center",
             justifyContent: "center",
             overflow: "hidden",
+            boxSizing: "border-box",
             transition: "width 0.2s ease, height 0.2s ease",
           }}
         >
@@ -453,7 +534,6 @@ export default function MapLocation() {
     }
   };
 
-  // Right panel toggle — jab right close ho to left open ho jaye
   const toggleRightPanel = () => {
     if (showRightPanel) {
       setShowRightPanel(false);
@@ -464,7 +544,6 @@ export default function MapLocation() {
     }
   };
 
-  // Left panel toggle — jab left close ho to right open ho jaye
   const toggleLeftPanel = () => {
     if (showLeftPanel) {
       setShowLeftPanel(false);
@@ -479,7 +558,7 @@ export default function MapLocation() {
     <APIProvider apiKey={APIKEY}>
       <div className="map-page">
         {/* Logo */}
-        <div className="map-logo">
+        {/* <div className="map-logo">
           <a
             href="https://meraaquii.com/"
             target="_blank"
@@ -487,9 +566,8 @@ export default function MapLocation() {
           >
             <img src={Logo} alt="Mia Logo" />
           </a>
-        </div>
+        </div> */}
 
-        {/* ================= LEFT SIDE PANEL ================= */}
         <div className="map-actions-left">
           <button
             className="map-panel-toggle-left"
